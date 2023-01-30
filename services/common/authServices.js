@@ -1,4 +1,4 @@
-let authDao = require("../../dao/common/authDao.js");
+let authDao = require("../../dao/common/authDao");
 let UserDao = require("../../dao/buyer/admin/usersDao");
 let ApiUserDao = require("../../dao/common/apiUserDao");
 let Util = require("../../Util");
