@@ -6,7 +6,6 @@ let statusEnum = require("../../enums/commonStatusEnum");
 let redisClient = require("../../config/redis");
 let commonAuthService = require("../../userSubmodules/services/AuthService");
 let commonUserService = require("../../userSubmodules/services/UserService");
-const Hashids = require("hashids/cjs");
 
 module.exports = {
   login: async function (loginDto) {

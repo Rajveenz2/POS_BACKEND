@@ -1,6 +1,6 @@
 var JwtStrategy = require('passport-jwt').Strategy,
   ExtractJwt = require('passport-jwt').ExtractJwt,
-  AuthenticationService = require('../services/common/authServices'),
+  AuthenticationService = require("../services/common/authServices"),
   settings = require('../config/settings'),
   HeaderAPIKeyStrategy = require('passport-headerapikey').HeaderAPIKeyStrategy
 
