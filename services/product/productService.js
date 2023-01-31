@@ -1,4 +1,4 @@
-const dataDao = require("../../dao/admin/dataDao");
+const productDao = require("../../dao/product/productDao");
 const authDao = require("../../dao/admin/authDao");
 // const userDao = require("../../dao/buyer/admin/usersDao");
 const settings = require("../../config/settings");
@@ -9,47 +9,32 @@ const dropboxV2Api = require("dropbox-v2-api");
 // const ExcelExport = require("../../mobileSubmodules/common/excelExport/processor");
 
 module.exports = {
-  async getConfiguration() {
-    let config = await dataDao.getConfiguration([
-      "INTEVIEW_LENGTH_OPTIONS",
-      "IR_OPTIONS",
-      "OUTPUT_OPTIONS",
-      "TEMPLATES",
-      "CONSUMER_SEGMENT",
-      "DEMOGRAPHICS",
-      "AGE_GROUPS",
-    ]);
-    let countries = await dataDao.getCountries();
-    let toSendConfig = {};
+  async getProducts() {
+    return await productDao.getProducts();
+  },
 
-    config.forEach((c) => {
-      if (c.name === "INTEVIEW_LENGTH_OPTIONS") {
-        toSendConfig.interviewLength = c.options;
-      } else if (c.name === "IR_OPTIONS") {
-        toSendConfig.ir = c.options;
-      } else if (c.name === "OUTPUT_OPTIONS") {
-        toSendConfig.output = c.options;
-      } else if (c.name === "TEMPLATES") {
-        toSendConfig.templates = c.options;
-      } else if (c.name === "CONSUMER_SEGMENT") {
-        toSendConfig.consumerSegment = c.options;
-      } else if (c.name === "DEMOGRAPHICS") {
-        toSendConfig.demographics = c.options;
-      } else if (c.name === "AGE_GROUPS") {
-        toSendConfig.age = c.options;
-      }
-      toSendConfig.countries = countries;
-    });
+  async getProduct(params) {
+    return await productDao.getProduct(params);
+  },
 
-    return toSendConfig;
+  async deleteProduct(params) {
+    return await productDao.deleteProduct(params);
+  },
+
+  async updateProduct(params) {
+    return await productDao.updateProduct(params);
+  },
+
+  async addProduct(params) {
+    return await productDao.addProduct(params);
   },
 
   async getUserDemographics(data) {
-    let project = await dataDao.findAdminProject({
+    let project = await productDao.findAdminProject({
       _id: data._id,
     });
 
-    let audience = await dataDao.getAudience(data._id);
+    let audience = await productDao.getAudience(data._id);
     if (audience.audience.length == 1) {
       if (audience.audience[0].gender != null) {
         let numberOfCountries = project.projectData[0].country.length;
@@ -92,13 +77,13 @@ module.exports = {
     let demographics = [];
 
     if (data.country == null && data.country == undefined) {
-      countries = await dataDao.getUserCountry(data._id);
+      countries = await productDao.getUserCountry(data._id);
       for (let country of countries.projectData[0].country) {
         countryName = country;
-        sampleSizes = await dataDao.getSampleSize(data._id);
+        sampleSizes = await productDao.getSampleSize(data._id);
         sampleSize = sampleSizes.projectData[0];
-        let countryData = await dataDao.getDemographics(countryName);
-        let config = await dataDao.getConfiguration(["AGE_GROUPS"]);
+        let countryData = await productDao.getDemographics(countryName);
+        let config = await productDao.getConfiguration(["AGE_GROUPS"]);
 
         demographics.push({ countryData, config, sampleSize });
       }
@@ -107,9 +92,9 @@ module.exports = {
     } else {
       for (let country of data.country) {
         countryName = country;
-        let countryData = await dataDao.getDemographics(countryName);
-        let config = await dataDao.getConfiguration(["AGE_GROUPS"]);
-        sampleSizes = await dataDao.getSampleSize(data.user.projectID);
+        let countryData = await productDao.getDemographics(countryName);
+        let config = await productDao.getConfiguration(["AGE_GROUPS"]);
+        sampleSizes = await productDao.getSampleSize(data.user.projectID);
         sampleSize = sampleSizes.projectData[0];
 
         demographics.push({ countryData, config, sampleSize });
@@ -120,7 +105,7 @@ module.exports = {
   },
 
   async addCostConfig(data) {
-    return await dataDao.addCostConfig(data);
+    return await productDao.addCostConfig(data);
   },
 
   async getQuote(params) {
@@ -134,11 +119,11 @@ module.exports = {
 
     params.output = output;
     let dataToSend = [];
-    let templateName = await dataDao.getTemplateName(params.templateId);
+    let templateName = await productDao.getTemplateName(params.templateId);
 
-    let costConfig = await dataDao.getQuote(params);
+    let costConfig = await productDao.getQuote(params);
     if (params.country[0] != null) {
-      let currencyCode = await dataDao.getCurrencyCode(params.country[0]);
+      let currencyCode = await productDao.getCurrencyCode(params.country[0]);
       currencyCode = currencyCode.currency;
 
       let totalCostinUSD = params.sampleSize * costConfig.costPerSampleinUSD;
@@ -164,7 +149,7 @@ module.exports = {
       } else {
         sample = params.sampleSize;
       }
-      let currencyCode = await dataDao.getCurrencyCode(params.country[1]);
+      let currencyCode = await productDao.getCurrencyCode(params.country[1]);
       currencyCode = currencyCode.currency;
 
       let totalCostinUSD = sample * costConfig.costPerSampleinUSD;
@@ -190,7 +175,7 @@ module.exports = {
       } else {
         sample = params.sampleSize;
       }
-      let currencyCode = await dataDao.getCurrencyCode(params.country[2]);
+      let currencyCode = await productDao.getCurrencyCode(params.country[2]);
       currencyCode = currencyCode.currency;
 
       let totalCostinUSD = sample * costConfig.costPerSampleinUSD;
@@ -213,7 +198,7 @@ module.exports = {
   },
 
   async getTemplates(params) {
-    return await dataDao.getTemplates(params);
+    return await productDao.getTemplates(params);
   },
 
   async getDrafts(params) {
@@ -222,13 +207,13 @@ module.exports = {
 
     for (let templateId of templateIds.projects) {
       let id = templateId.project_id;
-      let templatess = await dataDao.findActiveProjects(id);
+      let templatess = await productDao.findActiveProjects(id);
 
       for (let template of templatess) {
         let projects = template.projectData;
         let names = template.data;
         for (let project of projects) {
-          data = await dataDao.getTemplates({ _id: project.templateId });
+          data = await productDao.getTemplates({ _id: project.templateId });
         }
         drafts.push({ names, data, id });
       }
@@ -237,33 +222,33 @@ module.exports = {
   },
 
   async getConfigs(params) {
-    let templateName = await dataDao.getTemplateName(params._id);
+    let templateName = await productDao.getTemplateName(params._id);
     let config = await this.getConfiguration();
 
     return { templateName, config };
   },
 
   async getProjectData(params) {
-    let data = await dataDao.findAdminProject({
+    let data = await productDao.findAdminProject({
       _id: params._id,
     });
     let projectData = data.data;
     let templateId = data.projectData[0].templateId;
     let project = [];
-    let template = await dataDao.getTemplates({ _id: templateId });
+    let template = await productDao.getTemplates({ _id: templateId });
     project.push({ projectData, template });
     return project;
   },
 
   async updateProjectDesc(params) {
-    let data = await dataDao.findAdminProject({
+    let data = await productDao.findAdminProject({
       _id: params.projectId,
     });
     if (data.data.length == 1) {
-      await dataDao.removeProjectDesc({ _id: params.projectId });
-      return await dataDao.updateProjectDesc(params);
+      await productDao.removeProjectDesc({ _id: params.projectId });
+      return await productDao.updateProjectDesc(params);
     } else {
-      return await dataDao.updateProjectDesc(params);
+      return await productDao.updateProjectDesc(params);
     }
   },
 
@@ -304,7 +289,7 @@ module.exports = {
     let addData = await authDao.update(data);
 
     for (let c of projectData.country) {
-      await dataDao.addCountry({
+      await productDao.addCountry({
         _id: addData,
         country: c,
       });
@@ -313,7 +298,7 @@ module.exports = {
   },
 
   async removeProject(params) {
-    return await dataDao.removeProject(params);
+    return await productDao.removeProject(params);
   },
 
   async getSampleSplit(params) {
@@ -343,19 +328,19 @@ module.exports = {
   },
 
   async saveSampleSplit(params) {
-    let a = await dataDao.findAdminProject({
+    let a = await productDao.findAdminProject({
       _id: params.data.projectID,
     });
     for (let data of a.audience) {
       let country = data.country;
       if (params.demo.country == country) {
-        await dataDao.updateAdminAudience({
+        await productDao.updateAdminAudience({
           _id: params.data.projectID,
           country: country,
           demo: params.demo,
         });
 
-        await dataDao.addSample({
+        await productDao.addSample({
           _id: params.data.projectID,
           demo: params.demo,
         });
@@ -371,7 +356,7 @@ module.exports = {
     if (params.files) {
       await this.saveFile(params.files.file, fileName);
     }
-    await dataDao.saveQuestionnaire(projectId, userId, fileName);
+    await productDao.saveQuestionnaire(projectId, userId, fileName);
     this.notifyOnSlack(params.files);
   },
 
@@ -410,7 +395,7 @@ module.exports = {
   },
 
   async getQuestions(params) {
-    let template = await dataDao.findAdminProject(params.projectId);
+    let template = await productDao.findAdminProject(params.projectId);
     let questionsLength = {};
     let interview = template.projectData[0].interviewLength;
 
@@ -427,23 +412,23 @@ module.exports = {
       return { a, questionsLength };
     } else {
       let templateId = template.projectData[0].templateId;
-      return await dataDao.getQuestions(templateId);
+      return await productDao.getQuestions(templateId);
     }
   },
 
   async saveQuestions(params) {
-    let a = await dataDao.findAdminProject({
+    let a = await productDao.findAdminProject({
       _id: params.projectId,
     });
 
     if (a.questions.length === 0) {
-      await dataDao.addQuestions({
+      await productDao.addQuestions({
         _id: params.projectId,
         questions: params.questions,
       });
     } else {
-      await dataDao.updateAdminQuestions({ _id: params.projectId });
-      await dataDao.addQuestions({
+      await productDao.updateAdminQuestions({ _id: params.projectId });
+      await productDao.addQuestions({
         _id: params.projectId,
         questions: params.questions,
       });
@@ -451,7 +436,7 @@ module.exports = {
   },
 
   async getCost(params) {
-    let project = await dataDao.findAdminProject({ _id: params.projectId });
+    let project = await productDao.findAdminProject({ _id: params.projectId });
     let projectCost = project.projectCost;
     let totalCostinUSD = project.projectData[0].totalCostinUSD;
 

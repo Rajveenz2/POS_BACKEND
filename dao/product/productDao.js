@@ -1,4 +1,4 @@
-const configuration = require("../../models/adminUser");
+const products = require("../../models/products");
 const AdminCost = require("../../models/adminUser");
 const currencyCode = require("../../models/adminUser");
 const templates = require("../../models/adminUser");
@@ -7,8 +7,27 @@ const countryData = require("../../models/adminUser");
 const AdminUser = require("../../models/adminUser");
 
 module.exports = {
-  async getConfiguration(configNames) {
-    return await configuration.find({ name: { $in: configNames } });
+  async getProducts() {
+    return await products.find();
+  },
+
+  async getProduct(params) {
+    return await products.find(params);
+  },
+
+  async updateProduct(params) {
+    return await products.findOneAndUpdate(
+      { _id: params._id },
+      params.productData
+    );
+  },
+
+  async deleteProduct(params) {
+    return await products.deleteOne({ _id: params._id });
+  },
+  // db.movies.deleteOne( { cast: "Brad Pitt" } )
+  async addProduct(params) {
+    return await products.create(params);
   },
 
   async findAdminProject(params) {
@@ -22,7 +41,7 @@ module.exports = {
       {
         _id: params._id,
       },
-      { $pull: {audience: {country : params.country} }}
+      { $pull: { audience: { country: params.country } } }
     );
   },
 
@@ -31,7 +50,7 @@ module.exports = {
       {
         _id: params._id,
       },
-      { $push: {audience: {country : params.country} }}
+      { $push: { audience: { country: params.country } } }
     );
   },
 
@@ -69,29 +88,25 @@ module.exports = {
   },
 
   async findActiveProjects(id, projectStatus) {
-    return await AdminProjects
-      .find({
-        _id: id,
-        projectStatus: 'A',
-        upload: {$ne : true}
-      })
-      .select("projectData.templateId  data.projectName data.projectDesc -_id");
+    return await AdminProjects.find({
+      _id: id,
+      projectStatus: "A",
+      upload: { $ne: true },
+    }).select("projectData.templateId  data.projectName data.projectDesc -_id");
   },
 
   async getSampleSize(params) {
-    return await AdminProjects
-      .findOne({
-        _id: params,
-      })
-      .select("projectData.sampleSize projectData.sampleSize1 projectData.sampleSize2 -_id");
+    return await AdminProjects.findOne({
+      _id: params,
+    }).select(
+      "projectData.sampleSize projectData.sampleSize1 projectData.sampleSize2 -_id"
+    );
   },
 
   async getUserCountry(data) {
-    return await AdminProjects
-      .findOne({
-        _id: data,
-      })
-      .select("projectData.country -_id");
+    return await AdminProjects.findOne({
+      _id: data,
+    }).select("projectData.country -_id");
   },
 
   async getDemographics(data) {
@@ -188,10 +203,8 @@ module.exports = {
   },
 
   async getAudience(params) {
-    return await AdminProjects
-      .findOne({
-        _id: params,
-      })
-      .select("audience -_id");
+    return await AdminProjects.findOne({
+      _id: params,
+    }).select("audience -_id");
   },
 };

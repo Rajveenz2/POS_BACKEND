@@ -16,7 +16,7 @@ router.get('/ping', function(req, res) {
 
 
 //admin
-router.use('/admin', require('./admin/dataRoute').router)
+router.use('/product', require('./product/productRoute').router)
 router.use('/admin/auth', require('./admin/authRoute').router)
 
 module.exports.router = router;
