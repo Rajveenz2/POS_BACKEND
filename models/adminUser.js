@@ -6,7 +6,6 @@ var adminUserSchema = new mongoose.Schema({
     status: String,
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now },
-    organization:  String,
     lastLogin: { type: Date },
     userId: { type: mongoose.Schema.Types.ObjectId},
     permissions: [],

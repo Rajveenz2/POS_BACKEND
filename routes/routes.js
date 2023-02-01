@@ -1,22 +1,25 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
 
-router.get('/', function(req, res) {
+router.get("/", function (req, res) {
   // #swagger.description = 'Redirect to github Home'
 
-  res.redirect("https://www.facebook.com")
-})
+  res.redirect("https://www.facebook.com");
+});
 
-router.get('/ping', function(req, res) {
+router.get("/ping", function (req, res) {
   // #swagger.description = 'Ping for checking status'
 
   res.status(200).send({ message: "Success" });
-})
-
-
+});
 
 //admin
-router.use('/product', require('./product/productRoute').router)
-router.use('/admin/auth', require('./admin/authRoute').router)
+router.use("/admin/auth", require("./admin/authRoute").router);
+
+//products
+router.use("/product", require("./product/productRoute").router);
+
+//table
+router.use("/table", require("./table/tableRoute").router);
 
 module.exports.router = router;

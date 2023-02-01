@@ -11,7 +11,6 @@ module.exports = function (passport) {
   opts.passReqToCallback = true
 
   passport.use('headerapikey', new HeaderAPIKeyStrategy({ header: 'Authorization', prefix: 'Api-Key ' }, true, function (apiKey, done, req) {
-    console.log(req.headers.passcode)
     AuthenticationService.authenticateApiUser(apiKey, req.headers.passcode).then(r => {
       return done(null, true)
     }).catch(e => {
