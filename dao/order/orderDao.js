@@ -26,7 +26,7 @@ module.exports = {
     // let a = await order.create(b);
     return await order.find({
       table: { $elemMatch: { _id: params._id } },
-      orderStatus: "Pending",
+      $or :[{orderStatus: "Pending"} , {orderStatus: "Delivered"}],
     });
   },
 };
