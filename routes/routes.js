@@ -22,4 +22,7 @@ router.use("/product", require("./product/productRoute").router);
 //table
 router.use("/table", require("./table/tableRoute").router);
 
+//order
+router.use("/order", require("./order/orderRoute").router);
+
 module.exports.router = router;

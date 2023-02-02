@@ -1,4 +1,4 @@
-const tableDao = require("../../dao/table/tableDao.js");
+const tableDao = require("../../dao/table/tableDao");
 
 module.exports = {
   async addTable(params) {
@@ -13,9 +13,9 @@ module.exports = {
     let totalTables = await tableDao.getTableslength();
     let activeTables = await tableDao.getActiveTableslength();
     let tables = totalTables.length;
-    let active = activeTables.length
+    let active = activeTables.length;
 
-    return{tables , active}
+    return { tables, active };
   },
 
   async getTable(params) {
@@ -23,9 +23,6 @@ module.exports = {
   },
 
   async deleteTable(params) {
-    for (let id of params.tableId) {
-      let _id = id;
-      let deleteTable = await tableDao.deleteTable(_id);
-    }
+    return await tableDao.deleteTable(params._id);
   },
 };

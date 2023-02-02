@@ -24,7 +24,6 @@ module.exports = {
   },
 
   async deleteTable(params) {
-    console.log(params)
-    return await products.deleteOne({ tableId: params });
+    return await products.deleteOne({ _id: params });
   },
 };

@@ -4,14 +4,14 @@ var passport = require('passport');
 require('../../config/passport')(passport);
 
 
-var dataController = require('../../controllers/table/tableController')
-router.post('/addTable', passport.authenticate('headerapikey', {session: false}),dataController.addTable);
+var tableController = require('../../controllers/table/tableController')
+router.post('/addTable', passport.authenticate('headerapikey', {session: false}),tableController.addTable);
 
-router.post('/getTables', passport.authenticate('user-rule-admin', {session: false}), dataController.getTables);
+router.post('/getTables', passport.authenticate('user-rule-admin', {session: false}), tableController.getTables);
 
-router.post('/getTableslength', passport.authenticate('headerapikey', {session: false}), dataController.getTableslength);
+router.post('/getTableslength', passport.authenticate('headerapikey', {session: false}), tableController.getTableslength);
 
-router.post('/getTable', passport.authenticate('headerapikey', {session: false}), dataController.getTable);
+router.post('/getTable', passport.authenticate('user-rule-admin', {session: false}), tableController.getTable);
 
-router.post('/deleteTable', passport.authenticate('headerapikey', {session: false}), dataController.deleteTable);
+router.post('/deleteTable', passport.authenticate('headerapikey', {session: false}), tableController.deleteTable);
 module.exports.router = router;
