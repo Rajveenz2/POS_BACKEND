@@ -41,7 +41,6 @@ module.exports = function (passport) {
       rUser.countryCode = user.user.countryCode
       rUser.mobileNumber = user.user.mobileNumber
       rUser.name = user.user.name
-      rUser.role = user.localUser.roles
 
       return done(null, rUser)
     }).catch(e => {

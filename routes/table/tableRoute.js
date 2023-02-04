@@ -11,7 +11,7 @@ router.post('/getTables', passport.authenticate('user-rule-admin', {session: fal
 
 router.post('/getTableslength', passport.authenticate('headerapikey', {session: false}), tableController.getTableslength);
 
-router.post('/getTable', passport.authenticate('user-rule-admin', {session: false}), tableController.getTable);
+router.post('/getTable', passport.authenticate('headerapikey', {session: false}), tableController.getTable);
 
 router.post('/deleteTable', passport.authenticate('headerapikey', {session: false}), tableController.deleteTable);
 module.exports.router = router;
