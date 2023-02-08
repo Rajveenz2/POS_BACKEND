@@ -28,6 +28,7 @@ module.exports = {
   },
   // db.movies.deleteOne( { cast: "Brad Pitt" } )
   async addProduct(params) {
+    params.quantity = 0;
     return await products.create(params);
   },
 };

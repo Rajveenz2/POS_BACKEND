@@ -6,7 +6,7 @@ const mongoosePaginate = require("mongoose-paginate-v2");
 
 var TableSchema = new mongoose.Schema({
   tableId: String,
-  tableNumber: String,
+  tableNumber: { type: Number },
   tableStatus: String,
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },

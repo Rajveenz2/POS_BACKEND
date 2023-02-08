@@ -12,6 +12,7 @@ var ProductSchema = new mongoose.Schema({
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
   productCategory: String,
+  quantity: { type: Number },
   dummy: Boolean,
 });
 

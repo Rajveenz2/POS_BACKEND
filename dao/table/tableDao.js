@@ -3,12 +3,12 @@ const table = require("../../models/Tables");
 module.exports = {
   async addTable(params) {
     params.tableId = params.tableNumber;
-    params.tableStatus = 'Inactive'
+    params.tableStatus = "Inactive";
     return await table.create(params);
   },
 
   async getTables() {
-    return await table.find();
+    return await table.find().sort({ "tableNumber": 1 });;
   },
 
   async getTableslength() {
@@ -16,11 +16,13 @@ module.exports = {
   },
 
   async getActiveTableslength() {
-    return await table.find({ tableStatus: 'Active'});
+    return await table.find({ tableStatus: "Active" });
   },
 
   async getInactiveTables() {
-    return await table.find({ tableStatus: 'Inactive'});
+    return await table
+      .find({ tableStatus: "Inactive" })
+      .sort({ "tableNumber": 1 });
   },
 
   async getTable(params) {

@@ -31,7 +31,7 @@ module.exports = {
   confirmOrder: async function (req, res) {
     try {
       let confirmOrder = await orderService.confirmOrder(req.body);
-      res.status(200).send({ confirmOrder, message: "Success" });
+      res.status(200).send({ confirmOrder, message: "Order Successfully Placed" });
     } catch (error) {
       res.status(400).send({ message: error.message });
     }
