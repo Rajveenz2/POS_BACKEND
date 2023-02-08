@@ -4,7 +4,7 @@ var router = express.Router();
 router.get("/", function (req, res) {
   // #swagger.description = 'Redirect to github Home'
 
-  res.redirect("https://www.facebook.com");
+  res.redirect("https://www.linkedin.com/in/rajveenz2/");
 });
 
 router.get("/ping", function (req, res) {
