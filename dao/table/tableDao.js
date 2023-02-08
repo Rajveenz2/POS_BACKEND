@@ -1,29 +1,33 @@
-const products = require("../../models/Tables");
+const table = require("../../models/Tables");
 
 module.exports = {
   async addTable(params) {
     params.tableId = params.tableNumber;
-    params.tableStatus = 'Active'
-    return await products.create(params);
+    params.tableStatus = 'Inactive'
+    return await table.create(params);
   },
 
   async getTables() {
-    return await products.find();
+    return await table.find();
   },
 
   async getTableslength() {
-    return await products.find();
+    return await table.find();
   },
 
   async getActiveTableslength() {
-    return await products.find({ tableStatus: 'Active'});
+    return await table.find({ tableStatus: 'Active'});
+  },
+
+  async getInactiveTables() {
+    return await table.find({ tableStatus: 'Inactive'});
   },
 
   async getTable(params) {
-    return await products.find(params);
+    return await table.find(params);
   },
 
   async deleteTable(params) {
-    return await products.deleteOne({ _id: params });
+    return await table.deleteOne({ _id: params });
   },
 };

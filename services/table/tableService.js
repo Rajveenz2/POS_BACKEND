@@ -9,6 +9,10 @@ module.exports = {
     return await tableDao.getTables();
   },
 
+  async getInactiveTables() {
+    return await tableDao.getInactiveTables();
+  },
+
   async getTableslength() {
     let totalTables = await tableDao.getTableslength();
     let activeTables = await tableDao.getActiveTableslength();

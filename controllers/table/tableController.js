@@ -46,6 +46,15 @@ module.exports = {
     }
   },
 
+  getInactiveTables: async function (req, res) {
+    try {
+      let table = await tableService.getInactiveTables(req.body);
+      res.status(200).send({ table, message: "Success" });
+    } catch (error) {
+      res.status(400).send({ message: error.message });
+    }
+  },
+
   deleteTable: async function (req, res) {
     try {
       let deleteTable = await tableService.deleteTable(req.body);

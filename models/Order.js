@@ -10,13 +10,12 @@ const mongoosePaginate = require("mongoose-paginate-v2");
 var OrderSchema = new mongoose.Schema({
   order: [],
   orderStatus: String,
-  currentTotal: String,
-  addOns: String,
   total: String,
   table: [TableSchema],
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
   dummy: Boolean,
+  orderType: String,
 });
 
 OrderSchema.plugin(mongoosePaginate);

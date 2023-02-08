@@ -13,5 +13,7 @@ router.post('/getTableslength', passport.authenticate('headerapikey', {session: 
 
 router.post('/getTable', passport.authenticate('headerapikey', {session: false}), tableController.getTable);
 
+router.post('/getInactiveTables', passport.authenticate('headerapikey', {session: false}), tableController.getInactiveTables);
+
 router.post('/deleteTable', passport.authenticate('headerapikey', {session: false}), tableController.deleteTable);
 module.exports.router = router;
