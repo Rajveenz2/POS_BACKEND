@@ -9,19 +9,17 @@ module.exports = {
   async getactiveOrders() {
     let orders = await orderDao.getactiveOrders();
     for (let order of orders) {
-      console.log(order.table == '')
-      if (order.table != '') {
+      if (order.table.length != 0) {
         let tableId = order.table[0]._id;
         let tableNumber = await table
           .find({ _id: tableId })
           .select("tableNumber , -_id");
         order.order.push(tableNumber[0]);
+      } else {
+        orders.pop(order);
       }
-      else{
-        return 0
-      }
-      return orders;
     }
+    return orders;
   },
 
   async addOrder(params) {
